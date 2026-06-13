@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="alternate icon" href="icon.ico">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>XELISTIC — Datenschutz</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @font-face {
+  font-family: 'DM Mono';
+  src: url('DMMono-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  }
+
+  @font-face {
+  font-family: 'DM Mono';
+  src: url('DMMono-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  }
+
+  @font-face {
+  font-family: 'DM Mono';
+  src: url('DMMono-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  }
+
+  .nav-mark {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.6rem;
+
+  display: inline-block;
+  vertical-align: middle;
+  transform: translateY(-1px);
+
+  opacity: 1.1;
+  }
+
+  :root {
+    --black:   #0a0a0a;
+    --dark:    #111111;
+    --panel:   #161616;
+    --border:  #242424;
+    --neon:    #218a32;
+    --white:   #f0f5f0;
+    --muted:   #666660;
+    --dim:     #333330;
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--black);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+    padding-bottom: 4rem;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 2px,
+      rgba(255,255,255,0.012) 2px,
+      rgba(255,255,255,0.012) 4px
+    );
+    pointer-events: none;
+    z-index: 1000;
+  }
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 2.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--neon); }
+
+  nav ul {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    align-items: center;
+  }
+
+  nav a {
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  nav a:hover, nav a.active { color: var(--neon); }
+
+  .page-header {
+    border-bottom: 1px solid var(--border);
+    padding: 3.5rem 2.5rem 2.5rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .page-eyebrow {
+    font-size: 0.6rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--neon);
+    margin-bottom: 1rem;
+  }
+
+  .page-title {
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    line-height: 0.95;
+  }
+
+  .page-title em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--muted);
+  }
+
+  .page-meta {
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .content {
+    max-width: 820px;
+    padding: 3rem 2.5rem;
+  }
+
+  .legal-section {
+    margin-bottom: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .legal-section:last-child { border-bottom: none; }
+
+  .section-number {
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--neon);
+    margin-bottom: 0.6rem;
+  }
+
+  .section-title {
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+  }
+
+  .section-body p {
+    font-size: 0.8rem;
+    line-height: 1.95;
+    color: rgba(245,245,240,0.6);
+    letter-spacing: 0.02em;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-body p:last-child { margin-bottom: 0; }
+
+  .section-body ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-body ul li {
+    font-size: 0.8rem;
+    line-height: 1.95;
+    color: rgba(245,245,240,0.6);
+    letter-spacing: 0.02em;
+    padding-left: 1.2rem;
+    position: relative;
+  }
+
+  .section-body ul li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--dim);
+  }
+
+  .section-body a {
+    color: var(--neon);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(33, 138, 50,0.3);
+    transition: border-color 0.15s;
+  }
+
+  .section-body a:hover { border-color: var(--neon); }
+
+  /* artikel badge */
+  .art-ref {
+    display: inline-block;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    padding: 0.1rem 0.45rem;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    margin-left: 0.3rem;
+    vertical-align: middle;
+  }
+
+  .fill-block {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border: 1px dashed rgba(33, 138, 50,0.3);
+    color: rgba(33, 138, 50,0.6);
+    font-size: 0.7rem;
+    font-style: italic;
+    margin: 0.15rem 0;
+    letter-spacing: 0.04em;
+  }
+
+  .page-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-top: 1px solid var(--border);
+    background: var(--black);
+    padding: 0.6rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 50;
+  }
+
+  .footer-left {
+    font-size: 0.58rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  .footer-right {
+    display: flex;
+    gap: 2rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  .footer-right a {
+    color: var(--dim);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .footer-right a:hover { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+  <img src="icon.svg" class="nav-mark" alt="">
+  XELISTIC
+  </a>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+  </ul>
+</nav>
+
+<header class="page-header">
+  <div>
+    <div class="page-eyebrow">DSGVO-Konform</div>
+    <h1 class="page-title">Daten<em>schutz</em></h1>
+  </div>
+  <div class="page-meta">
+    Stand: 2026<br>
+    DSGVO / BDSG
+  </div>
+</header>
+
+<main class="content">
+
+  <div class="legal-section">
+    <div class="section-number">01</div>
+    <div class="section-title">Verantwortlicher</div>
+    <div class="section-body">
+      <p>
+        Verantwortlicher im Sinne der DSGVO ist:<br><br>
+        Name: <span class="fill-block">Antoni Noworyta</span><br>
+        E-Mail: <span class="fill-block">antnoworyta@gmail.com</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <div class="section-number">02</div>
+    <div class="section-title">Erhobene Daten beim Seitenbesuch</div>
+    <div class="section-body">
+      <p>
+        Beim Aufrufen unserer Website werden durch den Webserver automatisch folgende Daten
+        in sogenannten Server-Log-Dateien gespeichert:
+      </p>
+      <ul>
+        <li>IP-Adresse des anfragenden Rechners (anonymisiert)</li>
+        <li>Datum und Uhrzeit des Zugriffs</li>
+        <li>Name und URL der abgerufenen Datei</li>
+        <li>Übertragene Datenmenge</li>
+        <li>Browser-Typ, Version und Betriebssystem</li>
+        <li>Referrer-URL (zuvor besuchte Seite)</li>
+      </ul>
+      <p>
+        Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse am sicheren
+        und stabilen Betrieb der Website). Die Daten werden nach spätestens 7 Tagen gelöscht.
+      </p>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <div class="section-number">03</div>
+    <div class="section-title">Hosting</div>
+    <div class="section-body">
+      <p>
+        Diese Website wird gehostet bei:<br><br>
+        <span class="fill-block">Antoni Noworyta</span><br>
+      </p>
+    	<p>
+      		Diese Website wird bei dem Verantwortlichen nach DSGVO gehostet. Die personenbezogenen Daten, die auf dieser Website erfasst werden, werden auf den Servern des Hosters gespeichert.
+    	</p>
+
+    	<p>
+      		Zusätzlich wird der Dienst Cloudflare (Cloudflare, Inc.) als Content Delivery Network (CDN) und Sicherheitsdienst eingesetzt.
+      		Dabei kann es zu einer Übertragung personenbezogener Daten (z. B. IP-Adressen) in die USA kommen.
+    	</p>
+
+    	<p>
+      		Mit den Anbietern besteht ein Vertrag zur Auftragsverarbeitung (Art. 28 DSGVO).
+      		Die Datenübertragung erfolgt verschlüsselt mittels TLS/HTTPS.
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <div class="section-number">04</div>
+    <div class="section-title">Cookies</div>
+    <div class="section-body">
+      <p>
+        Diese Website verwendet derzeit <strong style="color: var(--white);">keine Cookies</strong>.
+      </p>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <div class="section-number">05</div>
+    <div class="section-title">Ihre Rechte</div>
+    <div class="section-body">
+      <p>Sie haben gegenüber uns folgende Rechte hinsichtlich der Sie betreffenden personenbezogenen Daten:</p>
+      <ul>
+        <li>Recht auf Auskunft <span class="art-ref">Art. 15</span></li>
+        <li>Recht auf Berichtigung <span class="art-ref">Art. 16</span></li>
+        <li>Recht auf Löschung <span class="art-ref">Art. 17</span></li>
+        <li>Recht auf Einschränkung der Verarbeitung <span class="art-ref">Art. 18</span></li>
+        <li>Recht auf Datenübertragbarkeit <span class="art-ref">Art. 20</span></li>
+        <li>Recht auf Widerspruch <span class="art-ref">Art. 21</span></li>
+      </ul>
+      <p>
+        Zur Ausübung Ihrer Rechte wenden Sie sich bitte an:
+        <span class="fill-block">antnoworyta@gmail.com</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <div class="section-number">06</div>
+    <div class="section-title">Beschwerderecht bei der Aufsichtsbehörde</div>
+    <div class="section-body">
+      <p>
+        Sie haben das Recht, sich bei einer Datenschutz-Aufsichtsbehörde über die
+        Verarbeitung Ihrer personenbezogenen Daten durch uns zu beschweren.
+      </p>
+      <p>
+        Zuständige Aufsichtsbehörde (Bayern):<br>
+        Bayerisches Landesamt für Datenschutzaufsicht (BayLDA)<br>
+        Promenade 18, 91522 Ansbach<br>
+        <a href="https://www.lda.bayern.de" target="_blank" rel="noopener">www.lda.bayern.de</a>
+      </p>
+    </div>
+  </div>
+
+</main>
+
+<footer class="page-footer">
+  <span class="footer-left">© 2026 Xelistic — All rights reserved</span>
+  <div class="footer-right">
+    <a href="impressum.html">Impressum</a>
+    <a href="datenschutz.html">Datenschutz</a>
+  </div>
+</footer>
+
+</body>
+</html>
