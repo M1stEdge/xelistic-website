@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>XELISTIC — Under Construction</title>
+<title>XELISTIC — Coming Soon</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="alternate icon" href="icon.ico">
 <link rel="apple-touch-icon" href="icon.svg">
@@ -378,32 +378,92 @@
 
   object-fit: cover;
   object-position: center;
-
-  opacity: 0.12;
-
   filter:
     grayscale(100%)
     brightness(0.7)
     contrast(1.2)
     sepia(1)
     hue-rotate(65deg)
-    saturate(2);
-
-  mix-blend-mode: screen;
+    saturate(3);
 
   pointer-events: none;
   user-select: none;
 
-  z-index: 1;
-
-  mask-image: linear-gradient(
-    to left,
-    rgba(0,0,0,1),
-    rgba(0,0,0,0)
-  );
+  will-change: transform;
 }
 
   .ticker-right a:hover { color: var(--muted); }
+
+  /* ── MISTY · ANIMATION ─────────────────────────────── */
+  /* stage holds the image + glitch slices; the green tint,
+     mask-fade and screen-blend live here so all layers match */
+  .misty-stage {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    opacity: 0.3;
+    mix-blend-mode: screen;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1), rgba(0,0,0,0));
+    mask-image: linear-gradient(to left, rgba(0,0,0,1), rgba(0,0,0,0));
+    transform: translate(var(--spx, 0px), var(--spy, 0px)) scale(1.05);
+    will-change: transform;
+  }
+
+  .misty-slice {
+    position: absolute;
+    inset: 0;
+    background-image: url('misty.png');
+    background-size: cover;
+    background-position: center;
+    filter:
+      grayscale(100%)
+      brightness(0.7)
+      contrast(1.2)
+      sepia(1)
+      hue-rotate(65deg)
+      saturate(2);
+    opacity: 0;
+    will-change: transform, clip-path;
+  }
+
+  .bg-text {
+    will-change: transform, opacity, clip-path;
+    transform: translate(calc(-50% + var(--wpx, 0px)), calc(-50% + var(--wpy, 0px)));
+    animation: mistyWordIn 2.4s cubic-bezier(.2,.7,.2,1) both,
+               mistyWordFlick 6s 2.6s infinite;
+  }
+
+  .bg-text::before,
+  .bg-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+  }
+  .bg-text::before { color: #3fe07a; mix-blend-mode: screen; opacity: 0; animation: mistyChromaA 5s 2.8s infinite; }
+  .bg-text::after  { color: #19d7c4; mix-blend-mode: screen; opacity: 0; animation: mistyChromaB 5s 2.8s infinite; }
+
+  .corner-tag, .corner-tag-br { animation: mistyLabIn 2.6s both; }
+
+  @keyframes mistyWordIn {
+    0%   { opacity: 0; clip-path: inset(0 100% 0 0); filter: blur(6px); }
+    40%  { opacity: 1; }
+    52%  { opacity: 0.15; }
+    68%  { opacity: 1; clip-path: inset(0 0 0 0); filter: blur(0); }
+    100% { opacity: 1; clip-path: inset(0 0 0 0); filter: blur(0); }
+  }
+  @keyframes mistyWordFlick { 0%,100%{opacity:1} 48%{opacity:0.7} 50%{opacity:1} 82%{opacity:0.85} }
+  @keyframes mistyChromaA { 0%,85%,100%{opacity:0;transform:translateX(-3px)} 86%{opacity:0.6;transform:translateX(-6px)} 90%{opacity:0.5;transform:translateX(-7px)} 93%{opacity:0} }
+  @keyframes mistyChromaB { 0%,84%,100%{opacity:0;transform:translateX(3px)} 87%{opacity:0.5;transform:translateX(7px)} 91%{opacity:0.5;transform:translateX(6px)} 94%{opacity:0} }
+  @keyframes mistyLabIn { 0%{opacity:0} 40%{opacity:0} 44%{opacity:1} 48%{opacity:0.2} 54%{opacity:1} 100%{opacity:1} }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bg-text, .bg-text::before, .bg-text::after,
+    .corner-tag, .corner-tag-br, .misty-slice { animation: none !important; }
+    .bg-text { opacity: 1; clip-path: none; filter: none; }
+  }
 </style>
 </head>
 <body>
@@ -454,10 +514,16 @@
   </div>
 
   <div class="hero-right">
-    <img src="misty.png" alt="" class="hero-image">
-    <div class="bg-text">MISTY</div>
+    <div class="misty-stage">
+      <img src="misty.png" alt="" class="hero-image" data-misty>
+      <div class="misty-slice" data-slice></div>
+      <div class="misty-slice" data-slice></div>
+      <div class="misty-slice" data-slice></div>
+    </div>
+    <div class="bg-text" data-text="MISTY">MISTY</div>
     <span class="corner-tag">v0.1 — Pre-launch</span>
     <span class="corner-tag-br">Bayern, DE<br>2026</span>
+  </div>
 </section>
 
 <footer class="ticker">
@@ -467,6 +533,66 @@
     <a href="datenschutz.html">Datenschutz</a>
   </div>
 </footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+
+  var stage  = document.querySelector('.misty-stage');
+  var word   = document.querySelector('.bg-text');
+  var img    = document.querySelector('[data-misty]');
+  var slices = [].slice.call(document.querySelectorAll('[data-slice]'));
+
+  /* ── PARALLAX (image + wordmark drift apart with the cursor) ── */
+  var tx = 0, ty = 0, cx = 0, cy = 0, last = 0;
+  window.addEventListener('mousemove', function (e) {
+    tx = (e.clientX / window.innerWidth - 0.5) * 2;
+    ty = (e.clientY / window.innerHeight - 0.5) * 2;
+    last = performance.now();
+  }, { passive: true });
+
+  function tick(now) {
+    if (now - last > 2600) {           // idle drift when the mouse is still
+      tx = Math.sin(now / 4200) * 0.5;
+      ty = Math.cos(now / 5600) * 0.4;
+    }
+    cx += (tx - cx) * 0.05;
+    cy += (ty - cy) * 0.05;
+    if (stage) {
+      stage.style.setProperty('--spx', (cx * -14) + 'px');
+      stage.style.setProperty('--spy', (cy * -10) + 'px');
+    }
+    if (word) {
+      word.style.setProperty('--wpx', (cx * 10) + 'px');
+      word.style.setProperty('--wpy', (cy * 7) + 'px');
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  /* ── VHS GLITCH (random horizontal tear-slices on the portrait) ── */
+  function doGlitch() {
+    slices.forEach(function (s) {
+      var top = Math.random() * 78;
+      var h = 3 + Math.random() * 14;
+      s.style.clipPath = 'inset(' + top + '% 0 ' + Math.max(0, 100 - top - h) + '% 0)';
+      s.style.transform = 'translateX(' + ((Math.random() * 2 - 1) * 12) + 'px)';
+      s.style.opacity = '1';
+    });
+    if (img) img.style.transform = 'translateX(' + ((Math.random() * 2 - 1) * 5) + 'px)';
+    setTimeout(function () {
+      slices.forEach(function (s) { s.style.opacity = '0'; });
+      if (img) img.style.transform = '';
+      if (Math.random() < 0.25) setTimeout(doGlitch, 70);   // occasional double-flash
+    }, 80 + Math.random() * 80);
+  }
+  function schedule() {
+    setTimeout(function () { doGlitch(); schedule(); }, 600 + Math.random() * 1500);
+  }
+  setTimeout(schedule, 2600);
+})();
+</script>
 
 </body>
 </html>
