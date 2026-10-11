@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XELISTIC — Artworks</title>
+<link rel="icon" type="image/svg+xml" href="../Img/icon.svg">
+<link rel="alternate icon" href="../Img/icon.ico">
+<link rel="apple-touch-icon" href="../Img/icon.svg">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @font-face {
+    font-family: 'DM Mono';
+    src: url('../Font/DMMono-Regular.ttf') format('truetype');
+    font-weight: 400; font-style: normal;
+  }
+  @font-face {
+    font-family: 'DM Mono';
+    src: url('../Font/DMMono-Light.ttf') format('truetype');
+    font-weight: 300; font-style: normal;
+  }
+  @font-face {
+    font-family: 'DM Mono';
+    src: url('../Font/DMMono-Medium.ttf') format('truetype');
+    font-weight: 500; font-style: normal;
+  }
+
+  :root {
+    --black:   #0a0a0a;
+    --dark:    #111111;
+    --panel:   #161616;
+    --border:  #242424;
+    --neon:    #218a32;
+    --white:   #f0f5f0;
+    --muted:   #666660;
+    --dim:     #333330;
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--black);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+    padding-bottom: 5rem;
+  }
+
+  /* scanline overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 2px,
+      rgba(255,255,255,0.012) 2px,
+      rgba(255,255,255,0.012) 4px
+    );
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 2.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .nav-mark {
+    width: 20px; height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+    transform: translateY(-1px);
+  }
+
+  nav ul {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    align-items: center;
+  }
+
+  nav a {
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  nav a:hover { color: var(--neon); }
+
+  /* PAGE HEADER */
+  .page-header {
+    border-bottom: 1px solid var(--border);
+    padding: 3.5rem 2.5rem 2.5rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .page-eyebrow {
+    font-size: 0.6rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--neon);
+    margin-bottom: 1rem;
+  }
+
+  .page-title {
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    line-height: 0.95;
+  }
+
+  .page-title em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--muted);
+  }
+
+  .page-meta {
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* FILTER BAR */
+  .filter-bar {
+    display: flex;
+    gap: 0;
+    padding: 0 2.5rem;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+
+  .filter-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 1rem 1.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+    margin-bottom: -1px;
+  }
+
+  .filter-btn:hover { color: var(--white); }
+  .filter-btn.active { color: var(--neon); border-bottom-color: var(--neon); }
+
+  /* GALLERY */
+  .gallery-wrap {
+    padding: 2.5rem;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  /* single artwork card */
+  .artwork-item {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background: var(--panel);
+    cursor: pointer;
+  }
+
+  /* transparent overlay — intercepts right-click and drag */
+  .artwork-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    background: transparent;
+  }
+
+  .artwork-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    /* image itself gets no pointer events — overlay handles all */
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    transition: transform 0.5s cubic-bezier(.2,.7,.2,1), filter 0.4s;
+    filter:
+      grayscale(20%)
+      brightness(0.85);
+  }
+
+  .artwork-item:hover .artwork-img {
+    transform: scale(1.04);
+    filter:
+      grayscale(0%)
+      brightness(1)
+      drop-shadow(0 0 24px rgba(33,138,50,0.2));
+  }
+
+  /* info overlay on hover */
+  .artwork-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem 1.25rem 1.25rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    z-index: 4;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none;
+  }
+
+  .artwork-item:hover .artwork-info {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .artwork-title {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 0.3rem;
+  }
+
+  .artwork-tag {
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--neon);
+  }
+
+  /* corner index number */
+  .artwork-num {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    font-size: 0.55rem;
+    letter-spacing: 0.22em;
+    color: var(--dim);
+    z-index: 4;
+    pointer-events: none;
+  }
+
+  /* hidden class for filter */
+  .artwork-item.hidden {
+    display: none;
+  }
+
+  /* LIGHTBOX */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    background: rgba(0,0,0,0.96);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .lightbox.open { display: flex; }
+
+  .lightbox-inner {
+    position: relative;
+    max-width: 90vw;
+    max-height: 85vh;
+  }
+
+  .lightbox-img {
+    max-width: 100%;
+    max-height: 85vh;
+    object-fit: contain;
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+  }
+
+  /* watermark overlay in lightbox */
+  .lightbox-wm {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .lightbox-wm span {
+    font-family: 'DM Mono', monospace;
+    font-size: clamp(1.2rem, 3vw, 2rem);
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(240,245,240,0.06);
+    transform: rotate(-35deg);
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  .lightbox-meta {
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+
+  .lightbox-title {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 0.3rem;
+  }
+
+  .lightbox-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--neon);
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .lightbox-close:hover { color: var(--white); border-color: var(--muted); }
+
+  .lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .lightbox-nav:hover { color: var(--white); border-color: var(--muted); }
+  .lightbox-prev { left: 1rem; }
+  .lightbox-next { right: 1rem; }
+
+  /* FOOTER */
+  .page-footer {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    border-top: 1px solid var(--border);
+    background: var(--black);
+    padding: 0.6rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 50;
+  }
+
+  .footer-left {
+    font-size: 0.58rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  .footer-right {
+    display: flex;
+    gap: 2rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  .footer-right a {
+    color: var(--dim);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .footer-right a:hover { color: var(--muted); }
+
+  /* empty state */
+  .gallery-empty {
+    display: none;
+    padding: 4rem 2.5rem;
+    text-align: center;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .artwork-img, .artwork-info { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">
+    <img src="../Img/icon.svg" class="nav-mark" alt="">
+    XELISTIC
+  </a>
+  <ul></ul>
+</nav>
+
+<header class="page-header">
+  <div>
+    <div class="page-eyebrow">Originale Werke</div>
+    <h1 class="page-title">Art<em>works</em></h1>
+  </div>
+  <div class="page-meta">
+    © 2026<br>
+    Alle Rechte vorbehalten
+  </div>
+</header>
+
+<div class="filter-bar" role="toolbar" aria-label="Kategorie filtern">
+  <button class="filter-btn active" data-filter="all">Alle</button>
+  <button class="filter-btn" data-filter="illustration">Illustration</button>
+  <button class="filter-btn" data-filter="animation">Animation</button>
+  <button class="filter-btn" data-filter="sketch">Sketch</button>
+</div>
+
+<div class="gallery-wrap">
+  <div class="gallery-grid" id="gallery">
+
+    <!-- Artwork 01 — Pfad + Kategorie anpassen -->
+    <div class="artwork-item" data-category="illustration" data-title="Artwork 01" data-tag="Illustration">
+      <span class="artwork-num">01</span>
+      <div class="artwork-overlay"></div>
+      <img src="../Img/Artworks/988898437473.png" alt="" class="artwork-img" draggable="false">
+      <div class="artwork-info">
+        <div class="artwork-title">Artwork 01</div>
+        <div class="artwork-tag">Illustration</div>
+      </div>
+    </div>
+
+    <!-- Artwork 02 -->
+    <div class="artwork-item" data-category="sketch" data-title="Artwork 02" data-tag="Sketch">
+      <span class="artwork-num">02</span>
+      <div class="artwork-overlay"></div>
+      <img src="../Img/Artworks/7483748374.jpg" alt="" class="artwork-img" draggable="false">
+      <div class="artwork-info">
+        <div class="artwork-title">Artwork 02</div>
+        <div class="artwork-tag">Sketch</div>
+      </div>
+    </div>
+
+    <!-- Artwork 03 -->
+    <div class="artwork-item" data-category="animation" data-title="Artwork 03" data-tag="Animation">
+      <span class="artwork-num">03</span>
+      <div class="artwork-overlay"></div>
+      <img src="../Img/Artworks/6664563234723.jpg" alt="" class="artwork-img" draggable="false">
+      <div class="artwork-info">
+        <div class="artwork-title">Artwork 03</div>
+        <div class="artwork-tag">Animation</div>
+      </div>
+    </div>
+
+    <!-- weitere Artworks nach gleichem Schema -->
+
+  </div>
+  <p class="gallery-empty" id="gallery-empty">Keine Werke in dieser Kategorie.</p>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Artwork Ansicht">
+  <button class="lightbox-close" id="lb-close">✕ Schließen</button>
+  <button class="lightbox-nav lightbox-prev" id="lb-prev">←</button>
+  <button class="lightbox-nav lightbox-next" id="lb-next">→</button>
+  <div class="lightbox-inner">
+    <img src="" alt="" class="lightbox-img" id="lb-img" draggable="false">
+    <div class="lightbox-wm"><span>© XELISTIC</span></div>
+  </div>
+  <div class="lightbox-meta">
+    <div class="lightbox-title" id="lb-title"></div>
+    <div class="lightbox-tag" id="lb-tag"></div>
+  </div>
+</div>
+
+<footer class="page-footer">
+  <span class="footer-left">© 2026 Xelistic — All rights reserved</span>
+  <div class="footer-right">
+    <a href="/Impressum">Impressum</a>
+    <a href="/Datenschutz">Datenschutz</a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── COPY PROTECTION ─────────────────────────── */
+
+  // Rechtsklick global deaktivieren
+  document.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+  });
+
+  // Drag deaktivieren
+  document.addEventListener('dragstart', function (e) {
+    e.preventDefault();
+  });
+
+  // Tastenkombinationen blockieren (Strg+S, Strg+U, F12, PrintScreen)
+  document.addEventListener('keydown', function (e) {
+    var blocked =
+      (e.ctrlKey && (e.key === 's' || e.key === 'S')) ||  // Speichern
+      (e.ctrlKey && (e.key === 'u' || e.key === 'U')) ||  // Quelltext
+      (e.ctrlKey && e.shiftKey && (e.key === 'i' || e.key === 'I')) || // DevTools
+      (e.ctrlKey && e.shiftKey && (e.key === 'j' || e.key === 'J')) || // Console
+      e.key === 'F12' ||
+      e.key === 'PrintScreen';
+    if (blocked) e.preventDefault();
+  });
+
+  /* ── FILTER ──────────────────────────────────── */
+  var items   = Array.from(document.querySelectorAll('.artwork-item'));
+  var btns    = Array.from(document.querySelectorAll('.filter-btn'));
+  var empty   = document.getElementById('gallery-empty');
+  var current = 'all';
+
+  btns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      current = btn.dataset.filter;
+      btns.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+
+      var visible = 0;
+      items.forEach(function (item) {
+        var match = current === 'all' || item.dataset.category === current;
+        item.classList.toggle('hidden', !match);
+        if (match) visible++;
+      });
+      empty.style.display = visible === 0 ? 'block' : 'none';
+    });
+  });
+
+  /* ── LIGHTBOX ────────────────────────────────── */
+  var lb      = document.getElementById('lightbox');
+  var lbImg   = document.getElementById('lb-img');
+  var lbTitle = document.getElementById('lb-title');
+  var lbTag   = document.getElementById('lb-tag');
+  var lbClose = document.getElementById('lb-close');
+  var lbPrev  = document.getElementById('lb-prev');
+  var lbNext  = document.getElementById('lb-next');
+  var lbIndex = 0;
+
+  function visibleItems() {
+    return items.filter(function (i) { return !i.classList.contains('hidden'); });
+  }
+
+  function openLightbox(index) {
+    var visible = visibleItems();
+    if (!visible.length) return;
+    lbIndex = Math.max(0, Math.min(index, visible.length - 1));
+    var item = visible[lbIndex];
+    var src  = item.querySelector('.artwork-img').src;
+    lbImg.src       = src;
+    lbTitle.textContent = item.dataset.title || '';
+    lbTag.textContent   = item.dataset.tag   || '';
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lb.classList.remove('open');
+    lbImg.src = '';
+    document.body.style.overflow = '';
+  }
+
+  function navigate(dir) {
+    var visible = visibleItems();
+    lbIndex = (lbIndex + dir + visible.length) % visible.length;
+    openLightbox(lbIndex);
+  }
+
+  // Overlays klickbar machen (nicht das Bild selbst)
+  items.forEach(function (item, i) {
+    item.querySelector('.artwork-overlay').addEventListener('click', function () {
+      var visible = visibleItems();
+      var idx = visible.indexOf(item);
+      if (idx !== -1) openLightbox(idx);
+    });
+  });
+
+  lbClose.addEventListener('click', closeLightbox);
+  lbPrev.addEventListener('click', function () { navigate(-1); });
+  lbNext.addEventListener('click', function () { navigate(1); });
+
+  // Klick neben Bild schließt Lightbox
+  lb.addEventListener('click', function (e) {
+    if (e.target === lb) closeLightbox();
+  });
+
+  // Pfeiltasten + Escape
+  document.addEventListener('keydown', function (e) {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape')      closeLightbox();
+    if (e.key === 'ArrowLeft')   navigate(-1);
+    if (e.key === 'ArrowRight')  navigate(1);
+  });
+
+  // Rechtsklick auch in der Lightbox blockieren
+  lbImg.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+
+})();
+</script>
+
+</body>
+</html>
