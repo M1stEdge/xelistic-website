@@ -311,6 +311,9 @@
     user-select: none;
     -webkit-user-drag: none;
     pointer-events: none;
+    /* canvas scales with CSS, internal resolution set via JS */
+    width: auto;
+    height: auto;
   }
 
   /* watermark overlay in lightbox */
@@ -478,38 +481,38 @@
   <div class="gallery-grid" id="gallery">
 
     <!-- Artwork 01 — Pfad + Kategorie anpassen -->
-    <div class="artwork-item" data-category="illustration" data-title="Artwork 01" data-tag="Illustration">
+    <div class="artwork-item" data-category="Sketch" data-title="Artwork 01" data-tag="Sketch">
       <span class="artwork-num">01</span>
       <div class="artwork-overlay"></div>
       <img src="../Img/Artworks/988898437473.png" alt="" class="artwork-img" draggable="false">
       <div class="artwork-info">
         <div class="artwork-title">Artwork 01</div>
-        <div class="artwork-tag">Illustration</div>
+        <div class="artwork-tag">Sketch</div>
       </div>
     </div>
 
     <!-- Artwork 02 -->
-    <div class="artwork-item" data-category="sketch" data-title="Artwork 02" data-tag="Sketch">
+    <div class="artwork-item" data-category="Illustration" data-title="Artwork 02" data-tag="Illustration">
       <span class="artwork-num">02</span>
       <div class="artwork-overlay"></div>
       <img src="../Img/Artworks/7483748374.jpg" alt="" class="artwork-img" draggable="false">
       <div class="artwork-info">
         <div class="artwork-title">Artwork 02</div>
-        <div class="artwork-tag">Sketch</div>
+        <div class="artwork-tag">Illustration</div>
       </div>
     </div>
 
     <!-- Artwork 03 -->
-    <div class="artwork-item" data-category="animation" data-title="Artwork 03" data-tag="Animation">
+    <div class="artwork-item" data-category="Illustration" data-title="Artwork 03" data-tag="Illustration">
       <span class="artwork-num">03</span>
       <div class="artwork-overlay"></div>
       <img src="../Img/Artworks/6664563234723.jpg" alt="" class="artwork-img" draggable="false">
       <div class="artwork-info">
         <div class="artwork-title">Artwork 03</div>
-        <div class="artwork-tag">Animation</div>
+        <div class="artwork-tag">Illustration</div>
       </div>
     </div>
-
+    
     <!-- weitere Artworks nach gleichem Schema -->
 
   </div>
@@ -522,8 +525,7 @@
   <button class="lightbox-nav lightbox-prev" id="lb-prev">←</button>
   <button class="lightbox-nav lightbox-next" id="lb-next">→</button>
   <div class="lightbox-inner">
-    <img src="" alt="" class="lightbox-img" id="lb-img" draggable="false">
-    <div class="lightbox-wm"><span>© XELISTIC</span></div>
+    <canvas class="lightbox-img" id="lb-canvas"></canvas>
   </div>
   <div class="lightbox-meta">
     <div class="lightbox-title" id="lb-title"></div>
@@ -590,17 +592,49 @@
   });
 
   /* ── LIGHTBOX ────────────────────────────────── */
-  var lb      = document.getElementById('lightbox');
-  var lbImg   = document.getElementById('lb-img');
-  var lbTitle = document.getElementById('lb-title');
-  var lbTag   = document.getElementById('lb-tag');
-  var lbClose = document.getElementById('lb-close');
-  var lbPrev  = document.getElementById('lb-prev');
-  var lbNext  = document.getElementById('lb-next');
-  var lbIndex = 0;
+  var lb        = document.getElementById('lightbox');
+  var lbCanvas  = document.getElementById('lb-canvas');
+  var lbCtx     = lbCanvas.getContext('2d');
+  var lbTitle   = document.getElementById('lb-title');
+  var lbTag     = document.getElementById('lb-tag');
+  var lbClose   = document.getElementById('lb-close');
+  var lbPrev    = document.getElementById('lb-prev');
+  var lbNext    = document.getElementById('lb-next');
+  var lbIndex   = 0;
 
   function visibleItems() {
     return items.filter(function (i) { return !i.classList.contains('hidden'); });
+  }
+
+  /* Zeichnet Bild + Wasserzeichen auf Canvas */
+  function drawToCanvas(src) {
+    var img = new Image();
+    img.onload = function () {
+      lbCanvas.width  = img.naturalWidth;
+      lbCanvas.height = img.naturalHeight;
+
+      // Bild zeichnen
+      lbCtx.drawImage(img, 0, 0);
+
+      // Wasserzeichen-Raster diagonal drüber
+      lbCtx.save();
+      lbCtx.globalAlpha = 0.11;
+      lbCtx.fillStyle   = '#f0f5f0';
+      lbCtx.font        = '500 ' + Math.max(16, img.naturalWidth / 28) + 'px monospace';
+      lbCtx.textAlign   = 'center';
+      lbCtx.translate(img.naturalWidth / 2, img.naturalHeight / 2);
+      lbCtx.rotate(-35 * Math.PI / 180);
+
+      var step  = img.naturalHeight / 5;
+      var stepX = img.naturalWidth  / 3;
+      for (var y = -img.naturalHeight * 1.5; y < img.naturalHeight * 1.5; y += step) {
+        for (var x = -img.naturalWidth * 1.5; x < img.naturalWidth * 1.5; x += stepX) {
+          lbCtx.fillText('© XELISTIC', x, y);
+        }
+      }
+      lbCtx.restore();
+    };
+    img.src = src;
   }
 
   function openLightbox(index) {
@@ -609,7 +643,7 @@
     lbIndex = Math.max(0, Math.min(index, visible.length - 1));
     var item = visible[lbIndex];
     var src  = item.querySelector('.artwork-img').src;
-    lbImg.src       = src;
+    drawToCanvas(src);
     lbTitle.textContent = item.dataset.title || '';
     lbTag.textContent   = item.dataset.tag   || '';
     lb.classList.add('open');
@@ -618,7 +652,7 @@
 
   function closeLightbox() {
     lb.classList.remove('open');
-    lbImg.src = '';
+    lbCtx.clearRect(0, 0, lbCanvas.width, lbCanvas.height);
     document.body.style.overflow = '';
   }
 
@@ -654,8 +688,8 @@
     if (e.key === 'ArrowRight')  navigate(1);
   });
 
-  // Rechtsklick auch in der Lightbox blockieren
-  lbImg.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+  // Rechtsklick auch auf Canvas blockieren
+  lbCanvas.addEventListener('contextmenu', function (e) { e.preventDefault(); });
 
 })();
 </script>
