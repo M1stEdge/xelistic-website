@@ -1,0 +1,401 @@
+/* ============================================================
+   XELISTIC — home.css
+   Nur für index.html (Startseite)
+   ============================================================ */
+
+/* Override base.css: Startseite braucht kein padding-bottom,
+   sie ist ein vollständiges Viewport-Layout */
+body {
+  padding-bottom: 0;
+}
+
+/* ── HERO LAYOUT ───────────────────────────────────────────── */
+
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: calc(100vh - 61px); /* 61px = Nav-Höhe */
+}
+
+/* ── HERO LINKS ────────────────────────────────────────────── */
+
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5rem 3rem 5rem 2.5rem;
+  border-right: 1px solid var(--border);
+  position: relative;
+}
+
+.hero-eyebrow {
+  font-size: 0.6rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--neon);
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hero-eyebrow::before {
+  content: '';
+  display: block;
+  width: 28px;
+  height: 1px;
+  background: var(--neon);
+}
+
+.hero-headline {
+  font-size: clamp(3.5rem, 7vw, 6.5rem);
+  font-weight: 500;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 2.5rem;
+}
+
+.hero-headline .slash {
+  color: var(--neon);
+  font-style: italic;
+  font-weight: 300;
+}
+
+.hero-body {
+  font-size: 0.78rem;
+  line-height: 1.8;
+  color: var(--muted);
+  max-width: 380px;
+  margin-bottom: 3rem;
+  letter-spacing: 0.03em;
+}
+
+/* ── STATUS LISTE ──────────────────────────────────────────── */
+
+.status-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--border);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.status-item:last-child { border-bottom: 1px solid var(--border); }
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-done     { background: var(--neon); box-shadow: 0 0 8px var(--neon); }
+.dot-progress { background: #f5a623;     box-shadow: 0 0 8px #f5a623; }
+.dot-pending  { background: var(--dim); }
+
+.status-name { flex: 1; color: var(--white); }
+.status-tag  { color: var(--muted); font-size: 0.58rem; }
+.status-tag.active { color: var(--neon); }
+
+/* ── HERO RECHTS ───────────────────────────────────────────── */
+
+.hero-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 2.5rem;
+  position: relative;
+  background: var(--panel);
+  overflow: hidden;
+}
+
+/* Diagonaler Rahmen-Akzent */
+.hero-right::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 180px;
+  height: 180px;
+  border: 1px solid var(--neon);
+  transform: rotate(45deg);
+  opacity: 0.08;
+}
+
+/* ── MISTY CHARAKTER ───────────────────────────────────────── */
+
+.misty-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.3;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1), rgba(0,0,0,0));
+  mask-image: linear-gradient(to left, rgba(0,0,0,1), rgba(0,0,0,0));
+  transform: translate(var(--spx, 0px), var(--spy, 0px)) scale(1.05);
+  will-change: transform;
+}
+
+.hero-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter:
+    grayscale(100%)
+    brightness(0.7)
+    contrast(1.2)
+    sepia(1)
+    hue-rotate(65deg)
+    saturate(3);
+  pointer-events: none;
+  user-select: none;
+  will-change: transform;
+}
+
+.misty-slice {
+  position: absolute;
+  inset: 0;
+  background-image: url('/Img/misty.png');
+  background-size: cover;
+  background-position: center;
+  filter:
+    grayscale(100%)
+    brightness(0.7)
+    contrast(1.2)
+    sepia(1)
+    hue-rotate(65deg)
+    saturate(2);
+  opacity: 0;
+  will-change: transform, clip-path;
+}
+
+/* ── HINTERGRUND-WORTMARKE ─────────────────────────────────── */
+
+.bg-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: clamp(6rem, 14vw, 12rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.03);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+  will-change: transform, opacity, clip-path;
+  transform: translate(calc(-50% + var(--wpx, 0px)), calc(-50% + var(--wpy, 0px)));
+  animation:
+    mistyWordIn 2.4s cubic-bezier(.2,.7,.2,1) both,
+    mistyWordFlick 6s 2.6s infinite;
+}
+
+.bg-text::before,
+.bg-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+.bg-text::before {
+  color: #3fe07a;
+  mix-blend-mode: screen;
+  opacity: 0;
+  animation: mistyChromaA 5s 2.8s infinite;
+}
+
+.bg-text::after {
+  color: #19d7c4;
+  mix-blend-mode: screen;
+  opacity: 0;
+  animation: mistyChromaB 5s 2.8s infinite;
+}
+
+/* ── ECKEN-LABELS ──────────────────────────────────────────── */
+
+.corner-tag {
+  position: absolute;
+  top: 2rem;
+  left: 2.5rem;
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--dim);
+  animation: mistyLabIn 2.6s both;
+}
+
+.corner-tag-br {
+  position: absolute;
+  bottom: 7rem;
+  right: 2.5rem;
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--dim);
+  text-align: right;
+  animation: mistyLabIn 2.6s both;
+}
+
+/* ── TICKER FOOTER (home-spezifisch) ───────────────────────── */
+
+.ticker {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-top: 1px solid var(--border);
+  background: var(--black);
+  padding: 0.6rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 50;
+}
+
+.ticker-left {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.ticker-right {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  align-items: center;
+}
+
+.ticker-right a {
+  color: var(--dim);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.ticker-right a:hover { color: var(--muted); }
+
+/* ── ANIMATIONS-TOGGLE BUTTON ──────────────────────────────── */
+
+.anim-toggle {
+  background: none;
+  border: none;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--dim);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s;
+}
+
+.anim-toggle:hover  { color: var(--muted); }
+.anim-toggle.active { color: var(--neon); }
+
+/* ── STRATEGY GAME TOOLTIP ─────────────────────────────────── */
+
+.strat-tip {
+  position: fixed;
+  background: #060c06;
+  border: 1px solid var(--neon);
+  color: var(--white);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  line-height: 1.75;
+  padding: 0.55rem 0.85rem;
+  max-width: 230px;
+  pointer-events: none;
+  z-index: 9999;
+  display: none;
+  box-shadow: 3px 3px 0 rgba(33,138,50,0.2);
+}
+
+.strat-tip-head {
+  font-size: 0.5rem;
+  letter-spacing: 0.24em;
+  color: var(--neon);
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── KEYFRAMES ─────────────────────────────────────────────── */
+
+@keyframes mistyWordIn {
+  0%   { opacity: 0; clip-path: inset(0 100% 0 0); filter: blur(6px); }
+  40%  { opacity: 1; }
+  52%  { opacity: 0.15; }
+  68%  { opacity: 1; clip-path: inset(0 0 0 0); filter: blur(0); }
+  100% { opacity: 1; clip-path: inset(0 0 0 0); filter: blur(0); }
+}
+
+@keyframes mistyWordFlick {
+  0%,100% { opacity: 1; }
+  48%     { opacity: 0.7; }
+  50%     { opacity: 1; }
+  82%     { opacity: 0.85; }
+}
+
+@keyframes mistyChromaA {
+  0%,85%,100% { opacity: 0; transform: translateX(-3px); }
+  86%         { opacity: 0.6; transform: translateX(-6px); }
+  90%         { opacity: 0.5; transform: translateX(-7px); }
+  93%         { opacity: 0; }
+}
+
+@keyframes mistyChromaB {
+  0%,84%,100% { opacity: 0; transform: translateX(3px); }
+  87%         { opacity: 0.5; transform: translateX(7px); }
+  91%         { opacity: 0.5; transform: translateX(6px); }
+  94%         { opacity: 0; }
+}
+
+@keyframes mistyLabIn {
+  0%  { opacity: 0; }
+  40% { opacity: 0; }
+  44% { opacity: 1; }
+  48% { opacity: 0.2; }
+  54% { opacity: 1; }
+  100%{ opacity: 1; }
+}
+
+/* ── REDUCED MOTION ────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-text,
+  .bg-text::before,
+  .bg-text::after,
+  .corner-tag,
+  .corner-tag-br,
+  .misty-slice {
+    animation: none !important;
+  }
+
+  .bg-text {
+    opacity: 1;
+    clip-path: none;
+    filter: none;
+  }
+}
