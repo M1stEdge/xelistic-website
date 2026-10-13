@@ -18,12 +18,12 @@
   function updateToggleUI() {
     if (!toggleBtn) return;
     if (advanced) {
-      toggleBtn.textContent = 'Fortgeschrittene Animationen ✔';
+      toggleBtn.textContent = 'Fortgeschrittene Animationen (an)';
       toggleBtn.classList.add('active');
       if (tipText) tipText.textContent =
         'Alle Effekte aktiv: Parallax, Glitch, Chroma. Deaktivieren auf schwächeren Geräten.';
     } else {
-      toggleBtn.textContent = 'Fortgeschrittene Animationen ✘';
+      toggleBtn.textContent = 'Fortgeschrittene Animationen (aus)';
       toggleBtn.classList.remove('active');
       if (tipText) tipText.textContent =
         'Erweiterte Animationen aktivieren. Empfohlen für leistungsstarke PCs.';
