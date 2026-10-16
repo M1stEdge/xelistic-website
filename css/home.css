@@ -348,17 +348,9 @@ body {
     letter-spacing: 0.16em;
   }
 
-  /* ── Terminal-Kanten auf Mobile anpassen ── */
-  .hero-terminal::before {
-    background:
-      linear-gradient(to bottom, var(--black) 0%, transparent 8%),
-      linear-gradient(to top,    var(--black) 0%, transparent 8%);
-  }
-
-  .hero-terminal::after {
-    background:
-      linear-gradient(to right, var(--black) 0%, transparent 4%),
-      linear-gradient(to left,  var(--black) 0%, transparent 4%);
+  /* ── Terminal auf Mobile komplett ausblenden ── */
+  .hero-terminal {
+    display: none;
   }
 
   /* ── Footer: einheitlich mit Nav-Padding ── */
