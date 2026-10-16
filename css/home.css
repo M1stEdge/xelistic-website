@@ -350,7 +350,7 @@ body {
 
   /* ── Terminal auf Mobile komplett ausblenden ── */
   .hero-terminal {
-    display: none;
+    display: none !important;
   }
 
   /* ── Footer: einheitlich mit Nav-Padding ── */

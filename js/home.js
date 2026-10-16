@@ -75,6 +75,9 @@
   document.fonts.ready.then(buildTerminal);
 
   function buildTerminal() {
+    /* Kein Terminal auf Mobile – spart JS + Performance */
+    if (window.innerWidth < 768) return;
+
     var tmpl     = document.getElementById('asciiArt');
     var terminal = document.getElementById('heroTerminal');
     if (!tmpl || !terminal) return;
