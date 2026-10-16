@@ -107,8 +107,31 @@ nav {
   text-transform: uppercase;
   color: var(--white);
   text-decoration: none;
+  display: flex;
+  align-items: center;
 }
 
+/* Kombiniertes Logo-SVG (Frosch + XELISTIC als eine Datei) */
+.nav-logo-img {
+  height: 22px;
+  width: auto;
+  display: block;
+  /* Raus: schnell (kein Kleben) */
+  transition: filter 0.12s ease-out;
+}
+
+/* CRT Röhrenmonitor Glow beim Hover */
+.nav-logo:hover .nav-logo-img {
+  /* Rein: langsamer für weiches Aufglühen */
+  transition: filter 0.35s ease-in;
+  filter:
+    brightness(1.18)
+    drop-shadow(0 0 4px rgba(33,138,50,0.95))
+    drop-shadow(0 0 10px rgba(33,138,50,0.6))
+    drop-shadow(0 0 22px rgba(33,138,50,0.28));
+}
+
+/* Fallback: separates Icon + Text (alte Seiten) */
 .nav-mark {
   width: 20px;
   height: 20px;
@@ -221,4 +244,27 @@ nav a.active {
 
 .footer-right a:hover {
   color: var(--muted);
+}
+
+/* ── MOBILE BASE ────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  nav {
+    padding: 0.9rem 1.25rem;
+  }
+
+  .page-footer {
+    padding: 0.6rem 1.25rem;
+  }
+
+  .page-header {
+    padding: 2rem 1.25rem 1.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .page-meta {
+    text-align: left;
+  }
 }

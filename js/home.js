@@ -1,129 +1,221 @@
 /* ============================================================
-   XELISTIC — home.js
-   Animations-Toggle, Parallax, VHS-Glitch
+   XELISTIC — home.js  (v8 — 5 feste Spalten, vw-basiert)
    ============================================================ */
 
 (function () {
   'use strict';
 
-  var reduce   = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var advanced = localStorage.getItem('xelistic-animations') === 'on';
+  var reduce   = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ── TOGGLE BUTTON ─────────────────────────────────────── */
+  /* ── TOGGLE ────────────────────────────────────────────── */
 
-  var toggleBtn = document.getElementById('animToggle');
-  var tip       = document.getElementById('stratTip');
-  var tipText   = document.getElementById('stratTipText');
+  var toggleBtn       = document.getElementById('animToggle');
+  var mobileToggleBtn = document.getElementById('animToggleMobile');
+  var tip             = document.getElementById('stratTip');
+  var tipText         = document.getElementById('stratTipText');
 
   function updateToggleUI() {
-    if (!toggleBtn) return;
-    if (advanced) {
-      toggleBtn.textContent = 'Fortgeschrittene Animationen (an)';
-      toggleBtn.classList.add('active');
-      if (tipText) tipText.textContent =
-        'Alle Effekte aktiv: Parallax, Glitch, Chroma. Deaktivieren auf schwächeren Geräten.';
-    } else {
-      toggleBtn.textContent = 'Fortgeschrittene Animationen (aus)';
-      toggleBtn.classList.remove('active');
-      if (tipText) tipText.textContent =
-        'Erweiterte Animationen aktivieren. Empfohlen für leistungsstarke PCs.';
+    /* Desktop-Toggle */
+    if (toggleBtn) {
+      if (advanced) {
+        toggleBtn.textContent = 'Fortgeschrittene Animationen ✔';
+        toggleBtn.classList.add('active');
+        if (tipText) tipText.textContent =
+          'Glitch-Effekte aktiv. Auf schwächeren Geräten deaktivieren.';
+      } else {
+        toggleBtn.textContent = 'Fortgeschrittene Animationen ✘';
+        toggleBtn.classList.remove('active');
+        if (tipText) tipText.textContent =
+          'Glitch-Effekte aktivieren. Empfohlen für leistungsstarke PCs.';
+      }
+    }
+    /* Mobiler Button */
+    if (mobileToggleBtn) {
+      mobileToggleBtn.textContent = advanced ? 'Animationen ✔' : 'Animationen ✘';
+      mobileToggleBtn.classList.toggle('active', advanced);
     }
   }
 
   updateToggleUI();
 
-  if (toggleBtn) {
-    toggleBtn.addEventListener('click', function () {
-      advanced = !advanced;
-      localStorage.setItem('xelistic-animations', advanced ? 'on' : 'off');
-      location.reload();
-    });
+  function onToggle() {
+    advanced = !advanced;
+    localStorage.setItem('xelistic-animations', advanced ? 'on' : 'off');
+    location.reload();
+  }
 
-    /* Tooltip folgt dem Cursor */
-    toggleBtn.addEventListener('mouseenter', function () {
-      if (tip) tip.style.display = 'block';
-    });
-    toggleBtn.addEventListener('mouseleave', function () {
-      if (tip) tip.style.display = 'none';
-    });
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', onToggle);
+    toggleBtn.addEventListener('mouseenter', function () { if (tip) tip.style.display = 'block'; });
+    toggleBtn.addEventListener('mouseleave', function () { if (tip) tip.style.display = 'none'; });
+  }
+  if (mobileToggleBtn) {
+    mobileToggleBtn.addEventListener('click', onToggle);
   }
 
   document.addEventListener('mousemove', function (e) {
     if (!tip || tip.style.display === 'none') return;
-    var x = e.clientX + 18;
-    var y = e.clientY + 12;
+    var x = e.clientX + 18, y = e.clientY + 12;
     if (x + 240 > window.innerWidth)  x = e.clientX - 248;
     if (y + 110 > window.innerHeight) y = e.clientY - 95;
     tip.style.left = x + 'px';
     tip.style.top  = y + 'px';
   }, { passive: true });
 
-  /* ── SCHWERE ANIMATIONEN NUR WENN EINGESCHALTET ─────────── */
+  /* ── WORDMARK EINFRIEREN ────────────────────────────────── */
 
-  if (reduce || !advanced) return;
-
-  var stage  = document.querySelector('.misty-stage');
-  var word   = document.querySelector('.bg-text');
-  var img    = document.querySelector('[data-misty]');
-  var slices = Array.from(document.querySelectorAll('[data-slice]'));
-
-  /* ── PARALLAX ──────────────────────────────────────────── */
-
-  var tx = 0, ty = 0, cx = 0, cy = 0, lastMove = 0;
-
-  window.addEventListener('mousemove', function (e) {
-    tx       = (e.clientX / window.innerWidth  - 0.5) * 2;
-    ty       = (e.clientY / window.innerHeight - 0.5) * 2;
-    lastMove = performance.now();
-  }, { passive: true });
-
-  function tick(now) {
-    /* Idle-Drift wenn Maus still steht */
-    if (now - lastMove > 2600) {
-      tx = Math.sin(now / 4200) * 0.5;
-      ty = Math.cos(now / 5600) * 0.4;
-    }
-    cx += (tx - cx) * 0.05;
-    cy += (ty - cy) * 0.05;
-
-    if (stage) {
-      stage.style.setProperty('--spx', (cx * -14) + 'px');
-      stage.style.setProperty('--spy', (cy * -10) + 'px');
-    }
-    if (word) {
-      word.style.setProperty('--wpx', (cx * 10) + 'px');
-      word.style.setProperty('--wpy', (cy *  7) + 'px');
-    }
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-
-  /* ── VHS GLITCH ────────────────────────────────────────── */
-
-  function doGlitch() {
-    slices.forEach(function (s) {
-      var top = Math.random() * 78;
-      var h   = 3 + Math.random() * 14;
-      s.style.clipPath  = 'inset(' + top + '% 0 ' + Math.max(0, 100 - top - h) + '% 0)';
-      s.style.transform = 'translateX(' + ((Math.random() * 2 - 1) * 12) + 'px)';
-      s.style.opacity   = '1';
-    });
-    if (img) img.style.transform = 'translateX(' + ((Math.random() * 2 - 1) * 5) + 'px)';
-
-    setTimeout(function () {
-      slices.forEach(function (s) { s.style.opacity = '0'; });
-      if (img) img.style.transform = '';
-      if (Math.random() < 0.25) setTimeout(doGlitch, 70); /* gelegentlicher Doppel-Blitz */
-    }, 80 + Math.random() * 80);
+  var wordmark = document.getElementById('heroWordmark');
+  if (wordmark) {
+    setTimeout(function () { wordmark.classList.add('ready'); }, 1500);
   }
 
-  function scheduleGlitch() {
-    setTimeout(function () {
-      doGlitch();
-      scheduleGlitch();
-    }, 600 + Math.random() * 1500);
+  /* ── TERMINAL: 5 FESTE SPALTEN ──────────────────────────── */
+
+  document.fonts.ready.then(buildTerminal);
+
+  function buildTerminal() {
+    var tmpl     = document.getElementById('asciiArt');
+    var terminal = document.getElementById('heroTerminal');
+    if (!tmpl || !terminal) return;
+
+    var artSrc = tmpl.content.querySelector('.terminal-art');
+    if (!artSrc) return;
+
+    /* ── Schriftgröße kalibrieren: art soll genau 20vw breit sein ── */
+    /* Probe bei bekannter Schriftgröße messen */
+    var probe = artSrc.cloneNode(true);
+    probe.style.cssText += ';position:absolute;visibility:hidden;top:0;left:0;font-size:4px;';
+    terminal.appendChild(probe);
+    var artWAt4px = probe.offsetWidth || 310;  /* Breite bei 4px font */
+    terminal.removeChild(probe);
+
+    /* Zielbreite: 20% des Viewports (= eine von 5 Spalten) */
+    var targetW    = window.innerWidth * 0.2;
+    var vwFontSize = (4 * targetW / artWAt4px / window.innerWidth * 100);
+    /* Als CSS Variable setzen → .terminal-art font-size: var(--art-font-size) */
+    terminal.style.setProperty('--art-font-size', vwFontSize.toFixed(3) + 'vw');
+
+    /* ── Höhe mit korrekter Schriftgröße messen ── */
+    var probe2 = artSrc.cloneNode(true);
+    probe2.style.cssText += ';position:absolute;visibility:hidden;top:0;left:0;'
+                          + 'font-size:' + vwFontSize.toFixed(3) + 'vw;';
+    terminal.appendChild(probe2);
+    var artH = probe2.offsetHeight || 400;
+    terminal.removeChild(probe2);
+
+    var viewH     = window.innerHeight;
+    var isMobile  = window.innerWidth < 768;
+    var NUM_COLS  = isMobile ? 3 : 5; /* Mobile: 3, Desktop: 5 */
+    var numCopies = Math.max(3, Math.ceil((viewH + artH) / artH) + 1);
+
+    var columns = [];
+
+    for (var i = 0; i < NUM_COLS; i++) {
+      var col = document.createElement('div');
+      col.className = 'terminal-col';
+      /* Flex-Basis dynamisch: 1/NUM_COLS der Breite */
+      col.style.flex = '0 0 ' + (100 / NUM_COLS).toFixed(4) + '%';
+
+      /* Leichte Opacity-Variation */
+      col.style.setProperty('--col-opacity', (0.14 + (i % 3) * 0.04).toFixed(2));
+
+      var scroll = document.createElement('div');
+      scroll.className = 'terminal-scroll';
+
+      for (var k = 0; k < numCopies; k++) {
+        scroll.appendChild(artSrc.cloneNode(true));
+      }
+
+      col.appendChild(scroll);
+      terminal.appendChild(col);
+
+      /* Gestaffelte Startpositionen */
+      var offset = (i / NUM_COLS) * artH;
+      var dir    = i % 2 === 0 ? -1 : 1;
+      var pos    = dir < 0 ? -offset : -(artH - offset);
+
+      columns.push({ scroll: scroll, col: col, pos: pos, dir: dir, artH: artH });
+    }
+
+    /* ── rAF-Loop: zoom-unabhängige Geschwindigkeit ────────── */
+    /* artH skaliert mit vw → auch Speed muss live skalieren.
+       PERIOD_FRAMES = Frames pro voller Periode (~15s @ 60fps).
+       currentArtH wird per Frame neu berechnet: wenn der User
+       rein/raus zoomt, passt sich der Wrap-Punkt sofort an.  */
+
+    var innerWidthAtLoad = window.innerWidth;
+    var PERIOD_FRAMES    = 900; /* ~15s bei 60fps (vorher ~30s) */
+
+    if (!reduce) {
+      (function tick() {
+        var scale       = window.innerWidth / innerWidthAtLoad;
+        var currentArtH = artH * scale;          /* live-skaliert */
+        var speed       = currentArtH / PERIOD_FRAMES;
+
+        for (var j = 0; j < columns.length; j++) {
+          var c = columns[j];
+          c.pos += c.dir * speed;
+
+          /* Zoom-sicherer Wrap via Modulo:
+             Normalisiert pos immer in (-currentArtH, 0] —
+             korrekt auch wenn currentArtH sich durch Zoom ändert.
+             JS %: -800 % 200 = 0, -201 % 200 = -1  ✓           */
+          c.pos = c.pos % currentArtH;
+          if (c.pos > 0) c.pos -= currentArtH; /* pos bleibt ≤ 0 */
+
+          c.scroll.style.transform = 'translateY(' + c.pos.toFixed(1) + 'px)';
+        }
+        requestAnimationFrame(tick);
+      })();
+    }
+
+    if (!reduce && advanced) startGlitch(columns);
   }
 
-  setTimeout(scheduleGlitch, 2600);
+  /* ── GLITCH (nur wenn Toggle AN) ───────────────────────── */
+
+  function startGlitch(columns) {
+    function glitchOne(entry) {
+      entry.col.style.transform =
+        'translateX(' + ((Math.random() * 2 - 1) * 14).toFixed(1) + 'px)';
+      entry.col.style.filter =
+        'hue-rotate(' + Math.round(Math.random() * 70 - 35) + 'deg)'
+        + ' brightness(' + (1.3 + Math.random() * 0.5).toFixed(2) + ')';
+      setTimeout(function () {
+        entry.col.style.transform = '';
+        entry.col.style.filter    = '';
+      }, 50 + Math.random() * 95);
+    }
+
+    function doGlitch() {
+      var n = 1 + Math.floor(Math.random() * 2);
+      for (var j = 0; j < n; j++) {
+        glitchOne(columns[Math.floor(Math.random() * columns.length)]);
+      }
+      if (Math.random() < 0.28) setTimeout(doGlitch, 55);
+    }
+
+    function schedule() {
+      setTimeout(function () { doGlitch(); schedule(); }, 700 + Math.random() * 2000);
+    }
+    setTimeout(schedule, 2200);
+
+    /* Wordmark RGB-Split */
+    function doWordmarkGlitch() {
+      if (!wordmark || !wordmark.classList.contains('ready')) return;
+      wordmark.classList.add('glitch');
+      setTimeout(function () { wordmark.classList.remove('glitch'); }, 145);
+    }
+
+    function scheduleWordmark() {
+      setTimeout(function () {
+        doWordmarkGlitch();
+        if (Math.random() < 0.35) setTimeout(doWordmarkGlitch, 195);
+        scheduleWordmark();
+      }, 3000 + Math.random() * 4000);
+    }
+    setTimeout(scheduleWordmark, 4000);
+  }
 
 })();

@@ -3,20 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>XELISTIC — Coming Soon</title>
-<link rel="icon" type="image/svg+xml" href="Img/icon.svg">
-<link rel="alternate icon" href="Img/icon.ico">
-<link rel="apple-touch-icon" href="Img/icon.svg">
+<title>XELISTIC</title>
+<link rel="icon" type="image/svg+xml" href="/Img/icon.svg">
+<link rel="alternate icon" href="/Img/icon.ico">
+<link rel="apple-touch-icon" href="/Img/icon.svg">
 <link rel="stylesheet" href="/css/base.css">
 <link rel="stylesheet" href="/css/home.css">
-<script src="/js/home.js" defer></script>
 </head>
 <body>
 
 <nav>
-  <a class="nav-logo" href="./">
-    <img src="Img/icon.svg" class="nav-mark" alt="">
-    XELISTIC
+  <a class="nav-logo" href="/">
+    <img src="/Img/nav-logo.svg" alt="XELISTIC" class="nav-logo-img">
   </a>
   <ul class="nav-right">
     <li><a href="/Artworks">Artworks</a></li>
@@ -25,68 +23,108 @@
 
 <section class="hero">
 
-  <div class="hero-left">
-    <div class="hero-eyebrow">Something beautiful is growing</div>
-
-    <h1 class="hero-headline">
-      XE<span class="slash">/</span><br>
-      LIS<br>
-      TIC
-    </h1>
-
-    <p class="hero-body">
-      Etwas Neues entsteht<br>
-      Mit Liebe ❤️<br>
-      Wir arbeiten daran — sehr bald live
-    </p>
-
-    <ul class="status-list">
-      <li class="status-item">
-        <span class="status-dot dot-done"></span>
-        <span class="status-name">Domain & Hosting</span>
-        <span class="status-tag active">Fertig</span>
-      </li>
-      <li class="status-item">
-        <span class="status-dot dot-progress"></span>
-        <span class="status-name">Design & Entwicklung</span>
-        <span class="status-tag">In Arbeit</span>
-      </li>
-      <li class="status-item">
-        <span class="status-dot dot-pending"></span>
-        <span class="status-name">Launch</span>
-        <span class="status-tag">—</span>
-      </li>
-    </ul>
+  <!-- Hintergrund -->
+  <div class="hero-bg">
+    <!--
+    <video class="hero-video" autoplay muted loop playsinline>
+      <source src="/Img/hero.mp4" type="video/mp4">
+    </video>
+    -->
   </div>
 
-  <div class="hero-right">
-    <div class="misty-stage">
-      <img src="Img/misty.png" alt="" class="hero-image" data-misty>
-      <div class="misty-slice" data-slice></div>
-      <div class="misty-slice" data-slice></div>
-      <div class="misty-slice" data-slice></div>
-    </div>
-    <div class="bg-text" data-text="MISTY">MISTY</div>
-    <span class="corner-tag">v0.1 — Pre-launch</span>
-    <span class="corner-tag-br">Bayern, DE<br>2026</span>
+  <!-- ASCII Art: 1× als Template, JS baut alle Spalten dynamisch -->
+  <template id="asciiArt"><pre class="terminal-art">                                           #@@@@@                                                                                        
+                                       :@@@-------@@                                                                                     
+                                     @@*--@@@@@@@@:-@@                                        @@@@@#**##@@@@                             
+                                   -@@--@@@       @@:-@@                                   @@@---+@@@@@@@:--@@                           
+                                  @@--@@@           @@-@@                               -@@--:@@         *@:--@#                         
+                                 @@--@@   @@@@@@@    @@-@@ @@@@@@@@@@:     @@@@@@@@@@@@@@--@@              @@-:@                         
+                                 @--@@   @@@@@@@@@@   @@@@@@@@@@=@@@@@@@@@@@@@:--@:-@@@@@@@     @@@@@@@*    @:-@@                        
+                                @@-@@   @@@@@@@@@@@@@@@@@@@-@@-@@--@-@-:@-@---@---@---@@@@@  @@@@@@@@@@@@   @@-@@                        
+                                @@-@@  =@@@@@@@@@@@@@@@@:@@--@@--@@-@@-@*-*@--@----@:--*@*@@@@@@@@@@@@@@@   @@-@@                        
+                                @:-@   %@@@@@@@@@@@@@=:@@--@@---@--@@--@:-:@---@----@---:@-%@@@@@@@@@@@@@:  @#-@@                        
+                                @--@@  @@@@@@@@@@@@--@---@@---@@--@@---@---@---%@---@#---:@--@@@@@@@@@@@@   @--@@                        
+                                @:-@@  @@@@@@@@@--=@---@@---:@---@@---@----@----@---:@-----@---@@@@@@@@@@  @@--@.                        
+                                @@-%@   @@@@:@+--@---@@----@@---%@----@----@:---@:---@-----@---:@@@@@@@@  @@--@@                         
+                                @@--@@ @@@-@@--@@--:@-----@----:@-----@----@:---@@---@-----:@---:@@@@@@   @:-+@                          
+                                 @@--@@@=:@:--@---@@----@@-----@-----@#----@:---:@---@=-----@-----@@@@  .@---@.                          
+                                  @@@@@-@@--@@---@:----@@-----@------@-----@:---:@---#@-----@+----:@@@@@@--=@                            
+                                   @@@-@@--@=---@-----@*-----@@-----:@-----@-----@----@-----:@-----@@@@@--@@                             
+                                  @@---@--@----@-----@+------@------@------@-----@----@------@------@-@@@@@                              
+                                 @@---@--@----@:----@@------@@------@------@----:@----@------@@-----=@-@@@                               
+                                @@@--@--@@---@@----:@-------@-------@------@-----@----@@------@------@--@@@                              
+                               @@@--@:--@----@-----@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+@----=@------@------@@--@@@                             
+                              @@@--%@---@@@@@@@@@@@@@@@@@@+-::@------@-:-=@@@@@@@@@@@@@@@@@@:--@-----:@---@@@                            
+                             -@@#@@@@@@@@@@#@-----@-----@-----@-----:@-----@@----:@-----@@@@@@@@@@=---@----@@                            
+                           *@@@@@@@---@----:@-----@-----@:----@@----:@-----@@----@@-----@:----@@@@@@@@@@---@@@                           
+                        @@@@@@---@----@@----@-----@*----@@----@@----:@-----@:----@@----@@-----@@----@@@@@@@%@@@                          
+                       @@@--:@---@@---@@----@@----@@----@@----@@----%@-----@-----@:----@*----:@-----@@---:@@@@@                          
+                        @@@--@@---@----@:---%@--:-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#:---@@----=@-----@--@@@@@                       
+                         @@---@@--:@:--@@@@@@@@@@@@@@@%%%%%%@               @%%%%%%@@@@@@@@@@@@@@:-@@----@@----@@@                       
+                         @@@---@:--@@@@@@@@@%%@%%%@@%%%%%%%@@               @%%%%%%%@ @%%%%%@@@@@@@@@@@--@:----@@                        
+                          @@@--@@@@@@@@@%%%%%@@%%%@@@%%%%%%%@               @%%%%%%@ @@%%%#@@@@%%%%%%@@@@@@@--:@@                        
+                           @@@@@@%@@%%@%%%%%@@@%%%@@ @%%%%%%@              @@%%%%%@@@@%%%@@  @%%%%%%%%@@%%@@@@@@@                        
+                            @@@%%%%@%@%%%%%%@@@@%%%@@@@@%%%%@@             @%%%%%@@@@%%@@@@@@@%%%%%#@@@%%%%%@@@@@                        
+                           %@@@@%%%@%@%%%%%@@@@@@%%@@  @@%%%%@@           @%%%%%@@@@@@    @@%%%%##@@  @%%%%%@@%@@@             @@@       
+                         @@@@%%@#%%@@@%%%%@     @@%%@@   @%%%%@@         @%%%%%@%       @@%%%@@@@@@@@ @%%%%%%@%%%%%@@@@@@@@#@@@@@        
+                    @@@@%%@@%%%@@%%%@@%%@@        @@%@@   @@%%%@@       @%%%%@@       @@@@@@.        @@%%%%%%@%%%%%%%%%%%%%%%%@@@        
+           @@@@@@%%%%%%%@@%%%%%#@%%%@@%@            @@@@..   @@@@@     @%@@@     @@@@@@@@           -@%%%%%@@@@@%%%%%%%%%%@@@@@#         
+            @@%%%%%%%%%@%%%%%%%%@@%%%%@@   @@@@@@@@@@@@@@@      @@@   @@         @@@@@@@@@@@@@@    @@%%%@@@%%%%%%%@@@@@@%%#%@@           
+              +@@@@@@@@%%%%%%%%@@@@@%%%%@@@@@@@  *@@@                              @@@      @@@@@@@%@@@=@@@@%%%%%%%%@@@@#@@@             
+                  @@@%%%%%%%%@@@%%@@  *@@@@       @@@                              @@@         @@@@@@   @@@@@@%%%%%%#@@@@%%#@@@@         
+               @@@%%%%%%%@@@@@%%%%@@              @@@                              @@@                  @@@@@ @@%%%%%%%@@@@%%%@@@@@      
+               @@@@@@@@@@@ +@@%%%@@               @@@                              @@@                  @@@@@ @@@@@%%%%%%@@@             
+                 @@@%%%%@@@ @%%%@@@               @@@.                             @@@                  @@@@ :@%@@@@@@@@@#%@@@           
+               @@@@@@@@@%#@@%%%@@@@                @@@                             @@@                  @@@  @%%@#%%@@                   
+                  @@@@@@@@@%%#@@@@@@               @@@                             @@@                  +  @@@%%@@%%%#@@                 
+                        .@%%@@@@                   -@@                             @@@                   @@  @%%%@@@%%%#@@               
+                       @@%@@    @@@                 @@@                            @@@                 @@    @@@%@@ .@@@@@@              
+                     =@@@@        @@@                                                                 @@         @@@                     
+                     @@             @                            @@                                  @@                                  
+                                    @@                                                              @@                                   
+                                     @.                                                             @@                                   
+                                     @@                                                            @@                                    
+                                      @@                                                          @@#                                    
+                                       @                                                          @@                                     
+                                       @@                                                        @@                                      
+                                        @@                      @@@    =                        @@                                       
+                                         %@                                                    @@                                        
+                                           @@                                                %@@                                         
+                                            @@@                                           @@@@                                           
+                                              @@@@@                                  @@@@@                                               
+                                                   @@@@@                       @@@@@@                                                    
+                                                         @@@@@@@@@@@@@@@@@@@@@@</pre></template>
+
+  <!-- Terminal: JS füllt diesen Container mit Spalten -->
+  <div class="hero-terminal" id="heroTerminal" aria-hidden="true"></div>
+
+  <!-- Zentriertes Wordmark + Beschreibung -->
+  <div class="hero-center">
+    <img src="/Img/wordmark.svg" alt="XELISTIC" class="hero-wordmark" id="heroWordmark">
+    <p class="hero-desc">A project of passion and love</p>
+    <p class="hero-subdesc">Made by me, Misty</p>
   </div>
+
 </section>
-
 
 <footer class="ticker">
   <span class="ticker-left">© 2026 Xelistic — All rights reserved</span>
   <div class="ticker-right">
     <button class="anim-toggle" id="animToggle"></button>
-    <a href="Impressum">Impressum</a>
-    <a href="Datenschutz">Datenschutz</a>
+    <a href="/Impressum">Impressum</a>
+    <a href="/Datenschutz">Datenschutz</a>
   </div>
 </footer>
- 
-<!-- Tooltip – direkt nach </footer> einfügen -->
+
+<!-- Mobiler Animationen-Button (nur auf kleinen Screens sichtbar) -->
+<button class="anim-toggle-mobile" id="animToggleMobile"></button>
+
 <div class="strat-tip" id="stratTip">
-  <div class="strat-tip-head">Fortgeschrittene Animationen (aus)</div>
+  <div class="strat-tip-head">⬡ Fortgeschrittene Animationen</div>
   <span id="stratTipText"></span>
 </div>
+
+<script src="/js/home.js" defer></script>
 
 </body>
 </html>

@@ -1,260 +1,208 @@
 /* ============================================================
-   XELISTIC — home.css
-   Nur für index.html (Startseite)
+   XELISTIC — home.css  (v2 — clean hero)
    ============================================================ */
 
-/* Override base.css: Startseite braucht kein padding-bottom,
-   sie ist ein vollständiges Viewport-Layout */
+/* Override base.css: kein padding-bottom, volle Höhe */
 body {
   padding-bottom: 0;
+  overflow: hidden; /* kein Scroll auf der Startseite */
 }
 
-/* ── HERO LAYOUT ───────────────────────────────────────────── */
+/* ── HERO ──────────────────────────────────────────────────── */
 
 .hero {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  min-height: calc(100vh - 61px); /* 61px = Nav-Höhe */
-}
-
-/* ── HERO LINKS ────────────────────────────────────────────── */
-
-.hero-left {
+  position: relative;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  padding: 5rem 3rem 5rem 2.5rem;
-  border-right: 1px solid var(--border);
-  position: relative;
-}
-
-.hero-eyebrow {
-  font-size: 0.6rem;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: var(--neon);
-  margin-bottom: 2rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.hero-eyebrow::before {
-  content: '';
-  display: block;
-  width: 28px;
-  height: 1px;
-  background: var(--neon);
-}
-
-.hero-headline {
-  font-size: clamp(3.5rem, 7vw, 6.5rem);
-  font-weight: 500;
-  line-height: 0.92;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-  color: var(--white);
-  margin-bottom: 2.5rem;
-}
-
-.hero-headline .slash {
-  color: var(--neon);
-  font-style: italic;
-  font-weight: 300;
-}
-
-.hero-body {
-  font-size: 0.78rem;
-  line-height: 1.8;
-  color: var(--muted);
-  max-width: 380px;
-  margin-bottom: 3rem;
-  letter-spacing: 0.03em;
-}
-
-/* ── STATUS LISTE ──────────────────────────────────────────── */
-
-.status-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-}
-
-.status-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.85rem 0;
-  border-top: 1px solid var(--border);
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.status-item:last-child { border-bottom: 1px solid var(--border); }
-
-.status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.dot-done     { background: var(--neon); box-shadow: 0 0 8px var(--neon); }
-.dot-progress { background: #f5a623;     box-shadow: 0 0 8px #f5a623; }
-.dot-pending  { background: var(--dim); }
-
-.status-name { flex: 1; color: var(--white); }
-.status-tag  { color: var(--muted); font-size: 0.58rem; }
-.status-tag.active { color: var(--neon); }
-
-/* ── HERO RECHTS ───────────────────────────────────────────── */
-
-.hero-right {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 2.5rem;
-  position: relative;
-  background: var(--panel);
+  height: calc(100vh - 61px - 37px); /* Viewport minus Nav minus Footer */
   overflow: hidden;
 }
 
-/* Diagonaler Rahmen-Akzent */
-.hero-right::before {
-  content: '';
-  position: absolute;
-  top: -40px;
-  right: -40px;
-  width: 180px;
-  height: 180px;
-  border: 1px solid var(--neon);
-  transform: rotate(45deg);
-  opacity: 0.08;
-}
+/* ── HINTERGRUND ───────────────────────────────────────────── */
 
-/* ── MISTY CHARAKTER ───────────────────────────────────────── */
-
-.misty-stage {
+.hero-bg {
   position: absolute;
   inset: 0;
-  z-index: 1;
-  opacity: 0.3;
-  mix-blend-mode: screen;
-  pointer-events: none;
-  -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1), rgba(0,0,0,0));
-  mask-image: linear-gradient(to left, rgba(0,0,0,1), rgba(0,0,0,0));
-  transform: translate(var(--spx, 0px), var(--spy, 0px)) scale(1.05);
-  will-change: transform;
+  z-index: 0;
+  background: var(--black);
 }
 
-.hero-image {
+/* CRT Scanlines – intensiver als der globale body::before */
+.hero-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 50%,
+      rgba(33,138,50,0.05) 0%,
+      transparent 68%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,0.022) 2px,
+      rgba(255,255,255,0.022) 4px
+    );
+  pointer-events: none;
+}
+
+/* Vignette an den Rändern */
+.hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center,
+    transparent 40%,
+    rgba(0,0,0,0.6) 100%);
+  pointer-events: none;
+}
+
+/* ── VIDEO SLOT (auskommentiert bis Video fertig) ──────────── */
+/*
+.hero-video {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
-  filter:
-    grayscale(100%)
-    brightness(0.7)
-    contrast(1.2)
-    sepia(1)
-    hue-rotate(65deg)
-    saturate(3);
-  pointer-events: none;
+  filter: grayscale(100%) brightness(0.22) contrast(1.15);
+  z-index: 0;
+}
+*/
+
+/* ── WORDMARK ZENTRUM ──────────────────────────────────────── */
+
+.hero-center {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
   user-select: none;
+  pointer-events: none;
+}
+
+.hero-wordmark {
+  height: clamp(180px, 38vh, 440px);
+  width: auto;
+  display: block;
+  animation: wordmarkIn 1.4s cubic-bezier(.16,1,.3,1) both;
+}
+
+.hero-desc {
+  font-size: 0.9rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+  font-weight: 300;
+  animation: wordmarkIn 1.4s cubic-bezier(.16,1,.3,1) 0.3s both;
+}
+
+.hero-subdesc {
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+  font-weight: 300;
+  animation: wordmarkIn 1.4s cubic-bezier(.16,1,.3,1) 0.5s both;
+}
+
+/* ── ASCII TERMINAL ────────────────────────────────────────── */
+
+.hero-terminal {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  display: flex;           /* Flexbox → kein left:Xpx, zoom-unabhängig */
+  align-items: flex-start;
+}
+
+/* Weiche Kanten oben + unten */
+.hero-terminal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, var(--black) 0%, transparent 9%),
+    linear-gradient(to top,    var(--black) 0%, transparent 9%);
+}
+
+/* Weiche Kanten links + rechts */
+.hero-terminal::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(to right, var(--black) 0%, transparent 5%),
+    linear-gradient(to left,  var(--black) 0%, transparent 5%);
+}
+
+/* Äußeres Element: exakt 20% → immer genau 5 Spalten */
+.terminal-col {
+  flex: 0 0 20%;
+  overflow: hidden;
+}
+
+/* Inneres Element: Scroll via JS (will-change für GPU) */
+.terminal-scroll {
+  display: flex;
+  flex-direction: column;
   will-change: transform;
 }
 
-.misty-slice {
-  position: absolute;
-  inset: 0;
-  background-image: url('/Img/misty.png');
-  background-size: cover;
-  background-position: center;
-  filter:
-    grayscale(100%)
-    brightness(0.7)
-    contrast(1.2)
-    sepia(1)
-    hue-rotate(65deg)
-    saturate(2);
-  opacity: 0;
-  will-change: transform, clip-path;
-}
-
-/* ── HINTERGRUND-WORTMARKE ─────────────────────────────────── */
-
-.bg-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  font-size: clamp(6rem, 14vw, 12rem);
-  font-weight: 500;
-  letter-spacing: -0.04em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.03);
-  white-space: nowrap;
-  pointer-events: none;
+/* Schriftgröße in vw → skaliert mit dem Viewport, zoom-unabhängig */
+.terminal-art {
+  font-family: 'DM Mono', monospace;
+  font-size: var(--art-font-size, 0.252vw);
+  line-height: 1.16;
+  color: #218a32;
+  opacity: var(--col-opacity, 0.18);
+  white-space: pre;
   user-select: none;
-  line-height: 1;
-  will-change: transform, opacity, clip-path;
-  transform: translate(calc(-50% + var(--wpx, 0px)), calc(-50% + var(--wpy, 0px)));
-  animation:
-    mistyWordIn 2.4s cubic-bezier(.2,.7,.2,1) both,
-    mistyWordFlick 6s 2.6s infinite;
-}
-
-.bg-text::before,
-.bg-text::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
   pointer-events: none;
+  letter-spacing: 0;
+  display: block;
+  flex-shrink: 0;
 }
 
-.bg-text::before {
-  color: #3fe07a;
-  mix-blend-mode: screen;
-  opacity: 0;
-  animation: mistyChromaA 5s 2.8s infinite;
+/* ── WORDMARK GLITCH FIX ───────────────────────────────────── */
+
+.hero-wordmark {
+  animation: wordmarkIn 1.4s cubic-bezier(.16,1,.3,1) both;
 }
 
-.bg-text::after {
-  color: #19d7c4;
-  mix-blend-mode: screen;
-  opacity: 0;
-  animation: mistyChromaB 5s 2.8s infinite;
+.hero-wordmark.ready {
+  animation: none;
+  opacity: 1;
+  transform: translateY(0);
+  filter: none;
 }
 
-/* ── ECKEN-LABELS ──────────────────────────────────────────── */
-
-.corner-tag {
-  position: absolute;
-  top: 2rem;
-  left: 2.5rem;
-  font-size: 0.58rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--dim);
-  animation: mistyLabIn 2.6s both;
+.hero-wordmark.ready.glitch {
+  animation: rgbSplit 0.13s steps(2) both;
 }
 
-.corner-tag-br {
-  position: absolute;
-  bottom: 7rem;
-  right: 2.5rem;
-  font-size: 0.58rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--dim);
-  text-align: right;
-  animation: mistyLabIn 2.6s both;
+@keyframes rgbSplit {
+  0%   { filter: none; transform: translateX(0); }
+  30%  { filter: drop-shadow(-5px 0 rgba(33,138,50,0.9))
+                 drop-shadow(5px 0 rgba(0,210,255,0.5));
+         transform: translateX(3px); }
+  60%  { filter: none; transform: translateX(-2px); }
+  100% { filter: none; transform: translateX(0); }
 }
 
-/* ── TICKER FOOTER (home-spezifisch) ───────────────────────── */
+/* ── TICKER FOOTER ─────────────────────────────────────────── */
 
 .ticker {
   position: fixed;
@@ -294,7 +242,7 @@ body {
 
 .ticker-right a:hover { color: var(--muted); }
 
-/* ── ANIMATIONS-TOGGLE BUTTON ──────────────────────────────── */
+/* ── ANIMATIONS-TOGGLE ─────────────────────────────────────── */
 
 .anim-toggle {
   background: none;
@@ -312,7 +260,7 @@ body {
 .anim-toggle:hover  { color: var(--muted); }
 .anim-toggle.active { color: var(--neon); }
 
-/* ── STRATEGY GAME TOOLTIP ─────────────────────────────────── */
+/* ── STRATEGY TOOLTIP ──────────────────────────────────────── */
 
 .strat-tip {
   position: fixed;
@@ -341,61 +289,126 @@ body {
   border-bottom: 1px solid var(--border);
 }
 
+/* ── MOBILER ANIMATIONEN-BUTTON (Desktop: versteckt) ──────── */
+
+.anim-toggle-mobile {
+  display: none;
+  position: fixed;
+  bottom: calc(42px + 1rem);
+  right: 1rem;
+  z-index: 100;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(10,10,10,0.92);
+  border: 1px solid var(--border);
+  color: var(--dim);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s, box-shadow 0.15s;
+  backdrop-filter: blur(8px);
+}
+
+.anim-toggle-mobile.active {
+  color: var(--neon);
+  border-color: var(--neon);
+  box-shadow: 0 0 10px rgba(33,138,50,0.25);
+}
+
+/* ── MOBILE (@max 768px) ───────────────────────────────────── */
+
+@media (max-width: 768px) {
+
+  /* ── Nav: kompaktes einheitliches Padding ── */
+  nav {
+    padding: 0.9rem 1.25rem;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    height: calc(100dvh - 50px - 46px); /* 50 = Nav, 46 = Footer */
+    min-height: 320px;
+  }
+
+  /* Wordmark */
+  .hero-wordmark {
+    height: clamp(110px, 52vw, 230px);
+  }
+
+  .hero-desc {
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+  }
+
+  .hero-subdesc {
+    font-size: 0.6rem;
+    letter-spacing: 0.16em;
+  }
+
+  /* ── Terminal-Kanten auf Mobile anpassen ── */
+  .hero-terminal::before {
+    background:
+      linear-gradient(to bottom, var(--black) 0%, transparent 8%),
+      linear-gradient(to top,    var(--black) 0%, transparent 8%);
+  }
+
+  .hero-terminal::after {
+    background:
+      linear-gradient(to right, var(--black) 0%, transparent 4%),
+      linear-gradient(to left,  var(--black) 0%, transparent 4%);
+  }
+
+  /* ── Footer: einheitlich mit Nav-Padding ── */
+  .ticker {
+    flex-wrap: wrap;
+    flex-direction: column;
+    padding: 0.6rem 1.25rem; /* gleiche Seiten wie Nav */
+    gap: 0.2rem;
+    height: auto;
+  }
+
+  .ticker-left {
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+  }
+
+  .ticker-right {
+    gap: 1.4rem;
+    font-size: 0.58rem;
+  }
+
+  /* Desktop-Toggle im Footer verstecken */
+  .ticker .anim-toggle {
+    display: none;
+  }
+
+  /* Mobiler Button einblenden */
+  .anim-toggle-mobile {
+    display: flex;
+    align-items: center;
+  }
+}
+
 /* ── KEYFRAMES ─────────────────────────────────────────────── */
 
-@keyframes mistyWordIn {
-  0%   { opacity: 0; clip-path: inset(0 100% 0 0); filter: blur(6px); }
-  40%  { opacity: 1; }
-  52%  { opacity: 0.15; }
-  68%  { opacity: 1; clip-path: inset(0 0 0 0); filter: blur(0); }
-  100% { opacity: 1; clip-path: inset(0 0 0 0); filter: blur(0); }
-}
-
-@keyframes mistyWordFlick {
-  0%,100% { opacity: 1; }
-  48%     { opacity: 0.7; }
-  50%     { opacity: 1; }
-  82%     { opacity: 0.85; }
-}
-
-@keyframes mistyChromaA {
-  0%,85%,100% { opacity: 0; transform: translateX(-3px); }
-  86%         { opacity: 0.6; transform: translateX(-6px); }
-  90%         { opacity: 0.5; transform: translateX(-7px); }
-  93%         { opacity: 0; }
-}
-
-@keyframes mistyChromaB {
-  0%,84%,100% { opacity: 0; transform: translateX(3px); }
-  87%         { opacity: 0.5; transform: translateX(7px); }
-  91%         { opacity: 0.5; transform: translateX(6px); }
-  94%         { opacity: 0; }
-}
-
-@keyframes mistyLabIn {
-  0%  { opacity: 0; }
-  40% { opacity: 0; }
-  44% { opacity: 1; }
-  48% { opacity: 0.2; }
-  54% { opacity: 1; }
-  100%{ opacity: 1; }
+@keyframes wordmarkIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
 }
 
 /* ── REDUCED MOTION ────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
-  .bg-text,
-  .bg-text::before,
-  .bg-text::after,
-  .corner-tag,
-  .corner-tag-br,
-  .misty-slice {
-    animation: none !important;
-  }
-
-  .bg-text {
-    opacity: 1;
-    clip-path: none;
-    filter: none;
-  }
+  .hero-wordmark { animation: none; }
 }
