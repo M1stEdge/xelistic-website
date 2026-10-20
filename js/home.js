@@ -121,7 +121,7 @@
       col.style.flex = '0 0 ' + (100 / NUM_COLS).toFixed(4) + '%';
 
       /* Leichte Opacity-Variation */
-      col.style.setProperty('--col-opacity', (0.14 + (i % 3) * 0.04).toFixed(2));
+      col.style.setProperty('--col-opacity', (0.22 + (i % 3) * 0.06).toFixed(2)); /* 0.22 / 0.28 / 0.34 */
 
       var scroll = document.createElement('div');
       scroll.className = 'terminal-scroll';

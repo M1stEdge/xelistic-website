@@ -54,7 +54,7 @@
   --panel:  #161616;
   --border: #242424;
   --neon:   #218a32;
-  --white:  #f0f5f0;
+  --white:  #f0ede8; /* Off-white: kein reines Weiß, wärmer, schonender */
   --muted:  #666660;
   --dim:    #333330;
 }
