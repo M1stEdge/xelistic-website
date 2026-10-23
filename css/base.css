@@ -243,7 +243,7 @@ nav a.active {
 }
 
 .footer-right a:hover {
-  color: var(--muted);
+  color: var(--neon);
 }
 
 /* ── MOBILE BASE ────────────────────────────────────────────── */
@@ -267,4 +267,51 @@ nav a.active {
   .page-meta {
     text-align: left;
   }
+}
+
+/* ── ANIMATION TOGGLE (alle Seiten) ────────────────────────── */
+
+.anim-toggle {
+  background: none;
+  border: none;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--dim);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s;
+}
+
+.anim-toggle:hover  { color: var(--muted); }
+.anim-toggle.active { color: var(--neon); }
+
+/* ── STRATEGY TOOLTIP (alle Seiten) ────────────────────────── */
+
+.strat-tip {
+  position: fixed;
+  background: #060c06;
+  border: 1px solid var(--neon);
+  color: var(--white);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  line-height: 1.75;
+  padding: 0.55rem 0.85rem;
+  max-width: 230px;
+  pointer-events: none;
+  z-index: 9999;
+  display: none;
+  box-shadow: 3px 3px 0 rgba(33,138,50,0.2);
+}
+
+.strat-tip-head {
+  font-size: 0.5rem;
+  letter-spacing: 0.24em;
+  color: var(--neon);
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--border);
 }

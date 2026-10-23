@@ -9,7 +9,8 @@
   display: flex;
   padding: 0 2.5rem;
   border-bottom: 1px solid var(--border);
-  overflow-x: auto;
+  overflow: clip;        /* blockiert alles: Mausrad, Touch, Trackpad */
+  touch-action: pan-y;   /* nur vertikales Scrollen erlaubt */
 }
 
 .filter-btn {

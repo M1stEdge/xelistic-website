@@ -10,6 +10,13 @@
 <link rel="stylesheet" href="/css/base.css">
 <link rel="stylesheet" href="/css/legal.css">
 <link rel="stylesheet" href="/css/terminal-bg.css">
+<noscript>
+  <style>
+    .page-terminal,
+    .anim-toggle,
+    .anim-toggle-mobile { display: none !important; }
+  </style>
+</noscript>
 </head>
 <body>
 
@@ -43,8 +50,8 @@
     <div class="section-body">
       <p>
         Verantwortlicher im Sinne der DSGVO ist:<br><br>
-        Name: <span class="fill-block">Antoni Noworyta</span><br>
-        E-Mail: <span class="fill-block">antnoworyta@gmail.com</span>
+        Name: [Vorname Nachname]<br>
+        E-Mail: [deine@email.de]
       </p>
     </div>
   </div>
@@ -116,8 +123,7 @@
         <li>Recht auf Widerspruch <span class="art-ref">Art. 21</span></li>
       </ul>
       <p>
-        Zur Ausübung Ihrer Rechte wenden Sie sich bitte an:
-        <span class="fill-block">antnoworyta@gmail.com</span>
+        Zur Ausübung Ihrer Rechte wenden Sie sich bitte an: [deine@email.de]
       </p>
     </div>
   </div>
@@ -144,6 +150,7 @@
 <footer class="page-footer">
   <span class="footer-left">© 2026 Xelistic — All rights reserved</span>
   <div class="footer-right">
+    <button class="anim-toggle" id="animToggle"></button>
     <a href="/Impressum">Impressum</a>
     <a href="/Datenschutz">Datenschutz</a>
   </div>
@@ -151,5 +158,10 @@
 
 <script src="/js/terminal-bg.js" defer></script>
 
+
+<div class="strat-tip" id="stratTip">
+  <div class="strat-tip-head">⬡ Fortgeschrittene Animationen</div>
+  <span id="stratTipText"></span>
+</div>
 </body>
 </html>

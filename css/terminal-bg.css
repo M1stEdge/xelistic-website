@@ -67,7 +67,7 @@
   font-size: var(--art-font-size, 0.252vw);
   line-height: 1.16;
   color: #218a32;
-  opacity: var(--col-opacity, 0.16);
+  opacity: var(--col-opacity, 0.22);
   white-space: pre;
   user-select: none;
   pointer-events: none;

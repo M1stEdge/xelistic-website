@@ -10,6 +10,13 @@
 <link rel="stylesheet" href="/css/base.css">
 <link rel="stylesheet" href="/css/legal.css">
 <link rel="stylesheet" href="/css/terminal-bg.css">
+<noscript>
+  <style>
+    .page-terminal,
+    .anim-toggle,
+    .anim-toggle-mobile { display: none !important; }
+  </style>
+</noscript>
 </head>
 <body>
 
@@ -42,7 +49,9 @@
     <div class="section-title">Angaben gemäß § 5 DDG</div>
     <div class="section-body">
       <p>
-        <span class="fill-block">Antoni Noworyta</span><br>
+        [Vorname Nachname]<br>
+        [Straße Hausnummer]<br>
+        [PLZ Ort]
       </p>
     </div>
   </div>
@@ -52,7 +61,7 @@
     <div class="section-title">Kontakt</div>
     <div class="section-body">
       <p>
-        E-Mail: <span class="fill-block">antnoworyta@gmail.com</span>
+        E-Mail: [deine@email.de]
       </p>
     </div>
   </div>
@@ -62,7 +71,9 @@
     <div class="section-title">Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</div>
     <div class="section-body">
       <p>
-        <span class="fill-block">Antoni Noworyta</span>
+        [Vorname Nachname]<br>
+        [Straße Hausnummer]<br>
+        [PLZ Ort]
       </p>
     </div>
   </div>
@@ -84,6 +95,7 @@
 <footer class="page-footer">
   <span class="footer-left">© 2026 Xelistic — All rights reserved</span>
   <div class="footer-right">
+    <button class="anim-toggle" id="animToggle"></button>
     <a href="/Impressum">Impressum</a>
     <a href="/Datenschutz">Datenschutz</a>
   </div>
@@ -91,5 +103,10 @@
 
 <script src="/js/terminal-bg.js" defer></script>
 
+
+<div class="strat-tip" id="stratTip">
+  <div class="strat-tip-head">⬡ Fortgeschrittene Animationen</div>
+  <span id="stratTipText"></span>
+</div>
 </body>
 </html>

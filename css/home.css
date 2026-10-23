@@ -173,7 +173,7 @@ body {
   font-size: var(--art-font-size, 0.252vw);
   line-height: 1.16;
   color: #218a32;
-  opacity: var(--col-opacity, 0.28);
+  opacity: var(--col-opacity, 0.36);
   white-space: pre;
   user-select: none;
   pointer-events: none;
@@ -246,7 +246,7 @@ body {
   transition: color 0.15s;
 }
 
-.ticker-right a:hover { color: var(--muted); }
+.ticker-right a:hover { color: var(--neon); }
 
 /* ── ANIMATIONS-TOGGLE ─────────────────────────────────────── */
 

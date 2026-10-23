@@ -5,7 +5,7 @@
 (function () {
   'use strict';
 
-  var advanced = localStorage.getItem('xelistic-animations') === 'on';
+  var advanced = sessionStorage.getItem('xelistic-animations') === 'on';
   var reduce   = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ── TOGGLE ────────────────────────────────────────────── */
@@ -41,13 +41,21 @@
 
   function onToggle() {
     advanced = !advanced;
-    localStorage.setItem('xelistic-animations', advanced ? 'on' : 'off');
+    sessionStorage.setItem('xelistic-animations', advanced ? 'on' : 'off');
     location.reload();
   }
 
   if (toggleBtn) {
     toggleBtn.addEventListener('click', onToggle);
-    toggleBtn.addEventListener('mouseenter', function () { if (tip) tip.style.display = 'block'; });
+    toggleBtn.addEventListener('mouseenter', function (e) {
+      if (!tip) return;
+      tip.style.display = 'block';
+      var x = e.clientX + 18, y = e.clientY + 12;
+      if (x + 240 > window.innerWidth)  x = e.clientX - 248;
+      if (y + 110 > window.innerHeight) y = e.clientY - 95;
+      tip.style.left = x + 'px';
+      tip.style.top  = y + 'px';
+    });
     toggleBtn.addEventListener('mouseleave', function () { if (tip) tip.style.display = 'none'; });
   }
   if (mobileToggleBtn) {
@@ -121,7 +129,7 @@
       col.style.flex = '0 0 ' + (100 / NUM_COLS).toFixed(4) + '%';
 
       /* Leichte Opacity-Variation */
-      col.style.setProperty('--col-opacity', (0.22 + (i % 3) * 0.06).toFixed(2)); /* 0.22 / 0.28 / 0.34 */
+      col.style.setProperty('--col-opacity', (0.30 + (i % 3) * 0.06).toFixed(2)); /* 0.30 / 0.36 / 0.42 */
 
       var scroll = document.createElement('div');
       scroll.className = 'terminal-scroll';

@@ -10,14 +10,25 @@
 <link rel="stylesheet" href="/css/base.css">
 <link rel="stylesheet" href="/css/artworks.css">
 <link rel="stylesheet" href="/css/terminal-bg.css">
+<noscript>
+  <style>
+    .page-terminal,
+    .anim-toggle,
+    .anim-toggle-mobile,
+    .filter-bar,
+    .gallery-empty  { display: none !important; }
+    .artwork-overlay { display: none !important; }
+    .artwork-item    { display: block !important; }
+  </style>
+</noscript>
 </head>
 <body>
+
 <div class="page-terminal" id="pageTerminal" aria-hidden="true"></div>
 
 <nav>
   <a class="nav-logo" href="/">
-    <img src="/Img/icon.svg" class="nav-mark" alt="">
-    XELISTIC
+    <img src="/Img/nav-logo.svg" alt="XELISTIC" class="nav-logo-img">
   </a>
   <ul>
     <li><a href="/Artworks" class="active">Artworks</a></li>
@@ -75,8 +86,6 @@
       </div>
     </div>
 
-    <!-- Neues Artwork: Schema kopieren und Nummer + Pfad anpassen -->
-
   </div>
   <p class="gallery-empty" id="gallery-empty">Keine Werke in dieser Kategorie.</p>
 </div>
@@ -96,16 +105,23 @@
 </div>
 
 <footer class="page-footer">
-  <span class="footer-left">© 2026 Xelistic — All rights reserved</span>
+  <span class="footer-left" data-cfg-year>© 2026 Xelistic — All rights reserved</span>
   <div class="footer-right">
+    <button class="anim-toggle" id="animToggle"></button>
     <a href="/Impressum">Impressum</a>
     <a href="/Datenschutz">Datenschutz</a>
   </div>
 </footer>
 
+<script src="/js/config.js" defer></script>
 <script src="/js/copy-protection.js"></script>
 <script src="/js/artworks.js"></script>
 <script src="/js/terminal-bg.js" defer></script>
 
+
+<div class="strat-tip" id="stratTip">
+  <div class="strat-tip-head">⬡ Fortgeschrittene Animationen</div>
+  <span id="stratTipText"></span>
+</div>
 </body>
 </html>
